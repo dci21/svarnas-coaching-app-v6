@@ -1,17 +1,20 @@
 require('dotenv').config();
 const express = require('express');
 const pool = require('./db');
+const authRoutes = require('./auth_routes');
 
 const app = express();
+app.use(express.json());
+
 const port = process.env.PORT || 3000;
 
 app.get('/api/ping', async (req, res) => {
   const t0 = Date.now();
   try {
-    await pool.query('SELECT 1');
+    const result = await pool.query('SELECT now()');
     res.json({
       db: 'connected',
-      timestamp: new Date().toISOString(),
+      timestamp: result.rows[0].now,
       latency: Date.now() - t0
     });
   } catch (err) {
@@ -20,6 +23,17 @@ app.get('/api/ping', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`listening on port ${port}`);
+app.use(authRoutes);
+
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err);
+  res.status(500).json({ error: 'internal error' });
 });
+
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`listening on port ${port}`);
+  });
+}
+
+module.exports = app;

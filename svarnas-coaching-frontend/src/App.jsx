@@ -1,35 +1,79 @@
 import { useState, useEffect } from 'react'
+import Login from './login'
+import Register from './register'
 
 function App() {
-  const [msg, setMsg] = useState(null)
-  const [pingData, setPingData] = useState(null)
+  const [pageTracking, setPageTracking] = useState('login')
+  const [sessionData, setSessionData] = useState(null)
 
   useEffect(() => {
-    fetch('/api/ping')
-      .then(async (res) => {
-        const body = await res.json()
-        if (res.ok) {
-          setMsg('backend and db are up and running')
-          setPingData(body)
-        } else {
-          setMsg('backend is running but connection to the db failed')
-        }
+    const token = localStorage.getItem('jwt_token')
+    if (!token) return
+
+    fetch('/api/auth/session', {
+      headers: { Authorization: 'Bearer ' + token }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error()
+        return res.json()
+      })
+      .then(data => {
+        setSessionData(data)
+        setPageTracking('dashboard')
       })
       .catch(() => {
-        setMsg("backend cant be reached")
+        localStorage.removeItem('jwt_token')
       })
   }, [])
+
+  function signinHandler(token) {
+    localStorage.setItem('jwt_token', token)
+    fetch('/api/auth/session', {
+      headers: { Authorization: 'Bearer ' + token }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error()
+        return res.json()
+      })
+      .then(data => {
+        setSessionData(data)
+        setPageTracking('dashboard')
+      })
+      .catch(() => {
+        localStorage.removeItem('jwt_token')
+      })
+  }
+
+  function signoutHandler() {
+    localStorage.removeItem('jwt_token')
+    setSessionData(null)
+    setPageTracking('login')
+  }
 
   return (
     <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
       <h1>svarnas coaching</h1>
-      {msg && <p>{msg}</p>}
-      {pingData && (
-        <ul>
-          <li>db: {pingData.db}</li>
-          <li>latency: {pingData.latency}ms</li>
-          <li>timestamp: {pingData.timestamp}</li>
-        </ul>
+
+      {pageTracking === 'login' && (
+        <Login
+          onLogin={signinHandler}
+          switchToSignup={() => setPageTracking('register')}
+        />
+      )}
+
+      {pageTracking === 'register' && (
+        <Register switchToSignin={() => setPageTracking('login')} />
+      )}
+
+      {pageTracking === 'dashboard' && sessionData && (
+        <div>
+          <p>
+            signed in as{' '}
+            <strong>{sessionData.how_we_call_you || sessionData.email}</strong>
+            {' '}({sessionData.role})
+          </p>
+          <button onClick={signoutHandler}>sign out</button>
+        </div>
       )}
     </div>
   )
