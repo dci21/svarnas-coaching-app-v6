@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const pool = require('./db');
 const authRoutes = require('./auth_routes');
+const profileRoutes = require('./profile_routes');
 
 const app = express();
 app.use(express.json());
@@ -24,6 +25,7 @@ app.get('/api/ping', async (req, res) => {
 });
 
 app.use(authRoutes);
+app.use(profileRoutes);
 
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);

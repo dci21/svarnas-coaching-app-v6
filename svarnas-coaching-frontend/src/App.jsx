@@ -1,13 +1,18 @@
 import { useState, useEffect } from 'react'
 import Login from './login'
 import Register from './register'
+import Profile from './profile'
 
 function App() {
   const [pageTracking, setPageTracking] = useState('login')
   const [sessionData, setSessionData] = useState(null)
 
+  function readToken() {
+    return localStorage.getItem('jwt_token')
+  }
+
   useEffect(() => {
-    const token = localStorage.getItem('jwt_token')
+    const token = readToken()
     if (!token) return
 
     fetch('/api/auth/session', {
@@ -72,8 +77,17 @@ function App() {
             <strong>{sessionData.how_we_call_you || sessionData.email}</strong>
             {' '}({sessionData.role})
           </p>
+          <button onClick={() => setPageTracking('profile')}>My profile</button>
+          {' '}
           <button onClick={signoutHandler}>sign out</button>
         </div>
+      )}
+
+      {pageTracking === 'profile' && (
+        <Profile
+          token={readToken()}
+          navigateBack={() => setPageTracking('dashboard')}
+        />
       )}
     </div>
   )
