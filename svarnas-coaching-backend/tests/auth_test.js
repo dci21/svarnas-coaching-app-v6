@@ -75,15 +75,15 @@ describe('GET /api/auth/session', () => {
   it('request without valid token rejected', async () => {
     const res = await request(app).get('/api/auth/session');
     expect(res.status).toBe(401);
-    expect(res.body.error).toBe('no token for authorization');
+    expect(res.body.error).toBe('missing token');
   });
 
-  it('shit token rejected', async () => {
+  it('garbage token rejected', async () => {
     const res = await request(app)
       .get('/api/auth/session')
       .set('Authorization', 'Bearer not.a.real.token');
 
     expect(res.status).toBe(401);
-    expect(res.body.error).toBe('token expired');
+    expect(res.body.error).toBe('unauthorised');
   });
 });

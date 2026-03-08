@@ -20,17 +20,17 @@ const PROFILE_COLUMNS = [
 
 router.get('/api/profile', authMiddleware, async (req, res) => {
   try {
-    const result = await pool.query(
+    const { rows } = await pool.query(
       `SELECT ${PROFILE_COLUMNS.join(', ')}
        FROM profiles WHERE user_id = $1`,
       [req.user.user_id]
     );
 
-    if (result.rows.length === 0) {
+    if (rows.length === 0) {
       return res.status(404).json({ error: 'cant find user' });
     }
 
-    res.json(result.rows[0]);
+    res.json(rows[0]);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'profile fetch error 500' });
@@ -57,38 +57,60 @@ router.put('/api/profile', authMiddleware, async (req, res) => {
     return res.status(400).json({ error: 'invalid goal_distance enum' });
   }
 
-  if (holdingFields.runs_per_week !== undefined) {
-    const runPerWeek = holdingFields.runs_per_week;
-    if (!Number.isInteger(runPerWeek) || runPerWeek < 1 || runPerWeek > 7) {
-      return res.status(400).json({
-        error: 'invalid input. runs_per_week should be integer from 1 to 7'
-      });
-    }
-  }
+  // runs_per_week is derived from availability - dont trust client value
+  delete holdingFields.runs_per_week;
 
   if (holdingFields.availability !== undefined) {
     const avaliability = holdingFields.availability;
+
+    if (Array.isArray(avaliability) && avaliability.length === 0) {
+      return res.status(400).json({
+        error: 'At least one day must be selected'
+      });
+    }
+
     if (!Array.isArray(avaliability) || !avaliability.every(d => validEnum.days.has(d))) {
       return res.status(400).json({
         error: 'invalid days in the avaliability. Days should be an array as ["mon", "tue", "wed", ... "sun"]'
       });
     }
+
+    // workouts count comes from how many days the user picked
+    const countAvailableDaysForTraining = avaliability.length;
+    holdingFields.runs_per_week = countAvailableDaysForTraining;
   }
 
-  const values = PROFILE_COLUMNS.map(c => {
-    if (c === 'availability' && holdingFields[c] !== undefined) return JSON.stringify(holdingFields[c]);
-    return holdingFields[c] !== undefined ? holdingFields[c] : null;
-  });
-  const setClause = PROFILE_COLUMNS.map((c, i) =>
-    c === 'availability' ? `${c} = $${i + 1}::jsonb` : `${c} = $${i + 1}`
-  ).join(', ');
+  if (holdingFields.long_run_day !== undefined && holdingFields.availability !== undefined) {
+    if (!holdingFields.availability.includes(holdingFields.long_run_day)) {
+      return res.status(400).json({
+        error: 'Longrun day can not be outside of the Available Days for Training'
+      });
+    }
+  }
+
+  // set clauses to avoid overwritting fields with null
+  const setCols = Object.keys(holdingFields);
+  const values = [];
+  const setParts = [];
+
+  // serialise js arrays as pg arrays - stringfiy and cast to meet the jsonb column accurately
+  for (let n = 0; n < setCols.length; n++) {
+    const col = setCols[n];
+    if (col === 'availability') {
+      setParts.push(col + ' = $' + (n + 1) + '::jsonb');
+      values.push(JSON.stringify(holdingFields[col]));
+    } else {
+      setParts.push(col + ' = $' + (n + 1));
+      values.push(holdingFields[col]);
+    }
+  }
 
   values.push(req.user.user_id);
 
   try {
     const result = await pool.query(
-      `UPDATE profiles SET ${setClause}
-       WHERE user_id = $${PROFILE_COLUMNS.length + 1}
+      `UPDATE profiles SET ${setParts.join(', ')}
+       WHERE user_id = $${setCols.length + 1}
        RETURNING ${PROFILE_COLUMNS.join(', ')}`,
       values
     );

@@ -1,3 +1,4 @@
+// svarnas-coaching-backend/auth_middleware.js
 const jwt = require('jsonwebtoken');
 
 function authMiddleware(req, res, next) {
@@ -5,17 +6,18 @@ function authMiddleware(req, res, next) {
   const token = header && header.startsWith('Bearer ') ? header.slice(7) : null;
 
   if (!token) {
-    return res.status(401).json({ error: 'no token for authorization' });
+    // not authenticated client
+    return res.status(401).json({ error: 'missing token' });
   }
+
   try {
     req.user = jwt.verify(token, process.env.JWT_SECRET);
-    next();
+    return next();
   } catch (err) {
-    // return always 401 not exposing the reason to not let attackers know more and probe the signin setup
-    if (err.name === 'TokenExpiredError') {
-      console.error('expired token from %s', req.ip);
-    }
-    return res.status(401).json({ error: 'token expired' });
+    // internal log for the error
+    console.warn('bad token from', req.ip);
+    // send generic unathorised error to the client
+    return res.status(401).json({ error: 'unauthorised' });
   }
 }
 

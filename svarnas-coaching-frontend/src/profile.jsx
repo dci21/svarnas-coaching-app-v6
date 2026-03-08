@@ -52,10 +52,13 @@ function Profile({ token, navigateBack }) {
   function addRemoveDay(day) {
     setProfileFields(prev => {
       const current = prev.availability || []
-      const next = current.includes(day)
+      const removing = current.includes(day)
+      const next = removing
         ? current.filter(d => d !== day)
         : [...current, day]
-      return { ...prev, availability: next }
+      const update = { ...prev, availability: next }
+      if (removing && prev.long_run_day === day) update.long_run_day = null
+      return update
     })
   }
 
@@ -65,13 +68,17 @@ function Profile({ token, navigateBack }) {
     setErr(null)
     setSuccessSave(true)
     try {
+      const payload = {
+        ...profileFields,
+        runs_per_week: (profileFields.availability || []).length
+      }
       const res = await fetch('/api/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + token
         },
-        body: JSON.stringify(profileFields)
+        body: JSON.stringify(payload)
       })
       const body = await res.json()
       if (res.ok) {
@@ -193,23 +200,6 @@ function Profile({ token, navigateBack }) {
 
         <div style={fieldStyling}>
           <label style={labelStyling}>
-            Workouts per Week <ContexBadge context="coach" />
-          </label>
-          <input
-            type="number"
-            min="1"
-            max="7"
-            style={inputStyling}
-            value={profileFields.runs_per_week ?? ''}
-            onChange={e => {
-              const v = e.target.value
-              updateField('runs_per_week', v === '' ? null : parseInt(v, 10))
-            }}
-          />
-        </div>
-
-        <div style={fieldStyling}>
-          <label style={labelStyling}>
             Avaliable Days for Training <ContexBadge context="coach" />
           </label>
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -234,9 +224,10 @@ function Profile({ token, navigateBack }) {
             style={inputStyling}
             value={profileFields.long_run_day || ''}
             onChange={e => updateField('long_run_day', e.target.value || null)}
+            disabled={!(profileFields.availability && profileFields.availability.length)}
           >
             <option value="">--</option>
-            {DAY_ENUMS.map(day => (
+            {(profileFields.availability || []).map(day => (
               <option key={day} value={day}>{day}</option>
             ))}
           </select>
