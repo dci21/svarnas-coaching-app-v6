@@ -26,3 +26,11 @@ CREATE TABLE profiles (
   availability        JSONB,
   long_run_day        VARCHAR(10)
 );
+
+CREATE TABLE coaching (
+  linking_id  SERIAL PRIMARY KEY,
+  coach_id    INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+  athlete_id  INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+  created     TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE(athlete_id)
+);

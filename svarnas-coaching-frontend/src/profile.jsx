@@ -40,6 +40,8 @@ function Profile({ token, navigateBack }) {
       })
       .then(data => {
         if (!data.availability) data.availability = []
+        //slice to trim the time and keep only the date to much the db column
+        if (data.race_date) data.race_date = data.race_date.slice(0, 10)
         setProfileFields(data)
       })
       .catch(() => setErr('generic fetch error'))
@@ -83,6 +85,8 @@ function Profile({ token, navigateBack }) {
       const body = await res.json()
       if (res.ok) {
         if (!body.availability) body.availability = []
+                //slice to trim the time and keep only the date to much the db column
+        if (body.race_date) body.race_date = body.race_date.slice(0, 10)
         setProfileFields(body)
         setSuccessMessage('Profile updated sucessfull')
       } else {
