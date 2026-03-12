@@ -16,11 +16,14 @@
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "express-rate-limit": "^8.2.1",
+    "js-yaml": "^4.1.1",
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.19.0"
   },
   "jest": {
-    "testMatch": ["**/tests/*_test.js"]
+    "testMatch": [
+      "**/tests/*_test.js"
+    ]
   },
   "devDependencies": {
     "jest": "^30.2.0",

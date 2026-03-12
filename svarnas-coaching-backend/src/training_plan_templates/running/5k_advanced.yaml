@@ -1,0 +1,870 @@
+﻿# ==========================================
+# MASTER TEMPLATE METADATA
+# ==========================================
+template_id: 5k-advanced-sample-template
+template_name: "5k advanced Not A Real Training Plan - Should be Generated in the future"
+sport: run
+target_distance: 5k
+levels:
+- advanced
+peak_weekly_volume_km:
+  min: 65
+  max: 80
+duration_weeks: 6
+version: "1.0.0"
+created: "2026-02-18"
+template_notes: >
+  5k advanced Not A Real Training Plan - Should be Generated in the future.
+# ==========================================
+# TRAINING PLAN (FIRST 6 WEEKS)
+# ==========================================
+weeks:
+- week_number: 1
+  theme: "General Phase Begins"
+  week_notes: >
+    Start these progression runs extremely easy. Focus on running fast but relaxed.
+
+  workouts:
+  - workout_id: w01_01
+    order_in_week: 1
+    importance: 3
+    title: "Kenyan-Style Progression"
+    category: base
+    session_rpe: 7
+    surface: road
+    workout_notes: >
+      Start extremely easy and build gradually. Focus on running fast but relaxed in the latter half.
+    blocks:
+    - type: progression
+      distance_m: 8000
+      intensity:
+        base: easy_pace
+        modifier: neutral
+      internal_note: >
+        Kenyan-style progression (easy â†’ moderate).
+    - type: cooldown
+      distance_m: 1000
+      intensity: easy_pace
+
+  - workout_id: w01_02
+    order_in_week: 2
+    importance: 5
+    title: "Easy Run with Strides"
+    category: base
+    session_rpe: 3
+    surface: road
+    workout_notes: >
+      Easy run. Strides are about smoothness and efficiency â€” not sprints.
+    blocks:
+    - type: steady
+      distance_m: { min: 6000, max: 7000 }
+      intensity: easy_pace
+    - type: repeats
+      reps: 4
+      steps:
+      - type: active
+        duration_min: 0.33
+        intensity:
+          base: 5k_pace
+          modifier: strong
+      - type: recovery
+        duration_min: 0.67
+        intensity: easy_pace
+
+  - workout_id: w01_03
+    order_in_week: 3
+    importance: 2
+    title: "Interval Run"
+    category: intervals
+    session_rpe: 7.5
+    surface: track
+    workout_notes: >
+      Good initial check of your current fitness estimate. Pace the reps evenly.
+    blocks:
+    - type: warmup
+      distance_m: 2000
+      intensity: easy_pace
+      internal_note: >
+        Progressive warm-up + add 4Ã—20" strides within the warm-up.
+    - type: repeats
+      reps: 10
+      steps:
+      - type: active
+        duration_min: 1.5
+        intensity:
+          base: 5k_pace
+          pct: 1.00
+      - type: recovery
+        duration_min: 1
+        intensity: recovery_pace
+        internal_note: >
+          Walk recovery.
+    - type: cooldown
+      distance_m: 1000
+      intensity: easy_pace
+
+  - workout_id: w01_04
+    order_in_week: 4
+    importance: 6
+    title: "Rest or Easy Run"
+    category: optional_run
+    session_rpe: 2
+    surface: road
+    workout_notes: >
+      Optional. If you feel good, do an easy run. Otherwise, take a full rest day.
+    blocks:
+    - type: steady
+      distance_m: { min: 0, max: 7000 }
+      intensity: easy_pace
+      internal_note: >
+        0m means complete rest.
+
+  - workout_id: w01_05
+    order_in_week: 5
+    importance: 4
+    title: "Easy Progression Run"
+    category: base
+    session_rpe: 5
+    surface: road
+    workout_notes: >
+      Start easy and progress to moderate if feeling good.
+    blocks:
+    - type: progression
+      distance_m: { min: 6000, max: 7000 }
+      intensity:
+        base: easy_pace
+        modifier: neutral
+      internal_note: >
+        Easy â†’ moderate progression.
+
+  - workout_id: w01_06
+    order_in_week: 6
+    importance: 1
+    title: "Long Run"
+    category: long_run
+    session_rpe: 6
+    surface: rolling
+    workout_notes: >
+      Time on feet run. Keep effort easy; fatigue should come from duration, not intensity. Rolling hills.
+    blocks:
+    - type: steady
+      distance_m: { min: 16000, max: 18000 }
+      intensity: easy_pace
+
+  - workout_id: w01_07
+    order_in_week: 7
+    importance: 7
+    title: "Rest Day"
+    category: recovery
+    session_rpe: 0
+    surface: road
+    workout_notes: >
+      Complete rest.
+    blocks: []
+
+- week_number: 2
+  theme: "Base Building"
+  week_notes: >
+    Focus on smoothness and efficiency in strides. Review your fitness estimate.
+
+  workouts:
+  - workout_id: w02_01
+    order_in_week: 1
+    importance: 3
+    title: "Progression Run"
+    category: base
+    session_rpe: 7
+    surface: road
+    workout_notes: >
+      Kenyan-style progression. Keep the build controlled and relaxed.
+    blocks:
+    - type: progression
+      distance_m: 8000
+      intensity:
+        base: easy_pace
+        modifier: neutral
+      internal_note: >
+        Kenyan-style progression (easy â†’ moderate).
+    - type: cooldown
+      distance_m: 1000
+      intensity: easy_pace
+
+  - workout_id: w02_02
+    order_in_week: 2
+    importance: 4
+    title: "Easy Run"
+    category: base
+    session_rpe: 3
+    surface: road
+    workout_notes: >
+      Easy run.
+    blocks:
+    - type: steady
+      distance_m: { min: 6000, max: 7000 }
+      intensity: easy_pace
+
+  - workout_id: w02_03
+    order_in_week: 3
+    importance: 2
+    title: "Strong Run"
+    category: tempo
+    session_rpe: 7.5
+    surface: road
+    workout_notes: >
+      Strong but controlled effort, backed off from half-marathon effort. You should finish feeling like you could continue.
+    blocks:
+    - type: warmup
+      distance_m: 2000
+      intensity: easy_pace
+      internal_note: >
+        Progressive warm-up + add 4Ã—20" strides within the warm-up.
+    - type: steady
+      distance_m: { min: 6000, max: 7000 }
+      intensity:
+        base: 5k_pace
+        pct: 0.85
+      internal_note: >
+        Controlled strong effort (below half-marathon effort).
+    - type: cooldown
+      distance_m: 1000
+      intensity: easy_pace
+
+  - workout_id: w02_04
+    order_in_week: 4
+    importance: 6
+    title: "Rest or Easy Run"
+    category: optional_run
+    session_rpe: 2
+    surface: road
+    workout_notes: >
+      Optional. Easy run if you feel good; otherwise rest.
+    blocks:
+    - type: steady
+      distance_m: { min: 0, max: 8000 }
+      intensity: easy_pace
+      internal_note: >
+        0m means complete rest.
+
+  - workout_id: w02_05
+    order_in_week: 5
+    importance: 5
+    title: "Easy Run with Strides"
+    category: base
+    session_rpe: 3
+    surface: road
+    workout_notes: >
+      Easy run + strides for smoothness.
+    blocks:
+    - type: steady
+      distance_m: { min: 6000, max: 8000 }
+      intensity: easy_pace
+    - type: repeats
+      reps: 4
+      steps:
+      - type: active
+        duration_min: 0.33
+        intensity:
+          base: 5k_pace
+          modifier: strong
+      - type: recovery
+        duration_min: 0.67
+        intensity: easy_pace
+
+  - workout_id: w02_06
+    order_in_week: 6
+    importance: 1
+    title: "Long Run"
+    category: long_run
+    session_rpe: 6
+    surface: rolling
+    workout_notes: >
+      Easy through rolling hills.
+    blocks:
+    - type: steady
+      distance_m: { min: 18000, max: 20000 }
+      intensity: easy_pace
+
+  - workout_id: w02_07
+    order_in_week: 7
+    importance: 7
+    title: "Rest Day"
+    category: recovery
+    session_rpe: 0
+    surface: road
+    workout_notes: >
+      Complete rest.
+    blocks: []
+
+- week_number: 3
+  theme: "Building Volume"
+  week_notes: ""
+
+  workouts:
+  - workout_id: w03_01
+    order_in_week: 1
+    importance: 3
+    title: "Cruise Intervals"
+    category: intervals
+    session_rpe: 7
+    surface: track
+    workout_notes: >
+      Classic threshold-style workout. Fast but relaxed; no heavy fatigue accumulating.
+    blocks:
+    - type: warmup
+      distance_m: 2000
+      intensity: easy_pace
+      internal_note: >
+        Add 4Ã—20" strides within the warm-up.
+    - type: repeats
+      reps: { min: 6, max: 7 }
+      steps:
+      - type: active
+        duration_min: 3
+        intensity:
+          base: 5k_pace
+          pct: 0.90
+      - type: recovery
+        duration_min: 0.75
+        intensity: easy_pace
+        internal_note: >
+          Jog recovery (~45").
+    - type: cooldown
+      distance_m: 1000
+      intensity: easy_pace
+
+  - workout_id: w03_02
+    order_in_week: 2
+    importance: 4
+    title: "Easy Run"
+    category: base
+    session_rpe: 3
+    surface: road
+    workout_notes: >
+      Easy run.
+    blocks:
+    - type: steady
+      distance_m: { min: 8000, max: 12000 }
+      intensity: easy_pace
+
+  - workout_id: w03_03
+    order_in_week: 3
+    importance: 2
+    title: "Interval Run"
+    category: intervals
+    session_rpe: 8
+    surface: track
+    workout_notes: >
+      Pace evenly from rep to rep and within each rep.
+    blocks:
+    - type: warmup
+      distance_m: 2000
+      intensity: easy_pace
+      internal_note: >
+        Add 4Ã—20" strides within the warm-up.
+    - type: repeats
+      reps: 8
+      steps:
+      - type: active
+        duration_min: 2
+        intensity:
+          base: 5k_pace
+          pct: 1.00
+      - type: recovery
+        duration_min: 1.5
+        intensity: recovery_pace
+        internal_note: >
+          Walk recovery (~1'30").
+    - type: cooldown
+      distance_m: 1000
+      intensity: easy_pace
+
+  - workout_id: w03_04
+    order_in_week: 4
+    importance: 6
+    title: "Rest or Easy Run"
+    category: optional_run
+    session_rpe: 2
+    surface: road
+    workout_notes: >
+      Optional. Very easy if you run; otherwise rest.
+    blocks:
+    - type: steady
+      distance_m: { min: 0, max: 10000 }
+      intensity: recovery_pace
+      internal_note: >
+        0m means complete rest.
+
+  - workout_id: w03_05
+    order_in_week: 5
+    importance: 5
+    title: "Easy Run"
+    category: base
+    session_rpe: 3
+    surface: road
+    workout_notes: >
+      Easy run.
+    blocks:
+    - type: steady
+      distance_m: { min: 8000, max: 11000 }
+      intensity: easy_pace
+
+  - workout_id: w03_06
+    order_in_week: 6
+    importance: 1
+    title: "Long Fast Run"
+    category: long_run
+    session_rpe: 8
+    surface: road
+    workout_notes: >
+      First long fast run. May get uncomfortable, but should not be overly tough. No cool-down.
+    blocks:
+    - type: warmup
+      distance_m: 2000
+      intensity: easy_pace
+      internal_note: >
+        Add 4Ã—20" strides within the warm-up.
+    - type: steady
+      distance_m: 15000
+      intensity:
+        base: 5k_pace
+        pct: { min: 0.70, max: 0.75 }
+      internal_note: >
+        Strong high-end aerobic effort.
+    - type: cooldown
+      internal_note: >
+        No cool-down.
+
+  - workout_id: w03_07
+    order_in_week: 7
+    importance: 7
+    title: "Rest Day"
+    category: recovery
+    session_rpe: 0
+    surface: road
+    workout_notes: >
+      Complete rest.
+    blocks: []
+
+- week_number: 4
+  theme: "Down Week - Recovery"
+  week_notes: >
+    Reduce volume to consolidate gains. Revise fitness estimate.
+
+  workouts:
+  - workout_id: w04_01
+    order_in_week: 1
+    importance: 4
+    title: "Easy Run"
+    category: base
+    session_rpe: 3
+    surface: road
+    workout_notes: >
+      Easy run.
+    blocks:
+    - type: steady
+      distance_m: { min: 5000, max: 8000 }
+      intensity: easy_pace
+
+  - workout_id: w04_02
+    order_in_week: 2
+    importance: 2
+    title: "Easy Progression Strides"
+    category: base
+    session_rpe: 7.5
+    surface: road
+    workout_notes: >
+      Easy â†’ moderate progression plus strides for smoothness.
+    blocks:
+    - type: progression
+      distance_m: { min: 8000, max: 10000 }
+      intensity:
+        base: easy_pace
+        modifier: neutral
+      internal_note: >
+        Easy â†’ moderate progression + add 4Ã—20" strides within the run.
+
+  - workout_id: w04_03
+    order_in_week: 3
+    importance: 3
+    title: "Strong Run"
+    category: tempo
+    session_rpe: 7.5
+    surface: road
+    workout_notes: >
+      Goal is to extend the same strong pace for longer. No cool-down.
+    blocks:
+    - type: warmup
+      distance_m: 2000
+      intensity: easy_pace
+      internal_note: >
+        Add 4Ã—20" strides within the warm-up.
+    - type: steady
+      distance_m: 8000
+      intensity:
+        base: 5k_pace
+        pct: 0.85
+    - type: cooldown
+      internal_note: >
+        No cool-down.
+
+  - workout_id: w04_04
+    order_in_week: 4
+    importance: 6
+    title: "Rest or Easy Run"
+    category: optional_run
+    session_rpe: 2
+    surface: road
+    workout_notes: >
+      Optional. Easy if you run; otherwise rest.
+    blocks:
+    - type: steady
+      distance_m: { min: 0, max: 8000 }
+      intensity: easy_pace
+      internal_note: >
+        0m means complete rest.
+
+  - workout_id: w04_05
+    order_in_week: 5
+    importance: 5
+    title: "Easy Run"
+    category: base
+    session_rpe: 3
+    surface: road
+    workout_notes: >
+      Easy run.
+    blocks:
+    - type: steady
+      distance_m: { min: 7000, max: 10000 }
+      intensity: easy_pace
+
+  - workout_id: w04_06
+    order_in_week: 6
+    importance: 1
+    title: "Progression Run"
+    category: long_run
+    session_rpe: 7
+    surface: road
+    workout_notes: >
+      Kenyan-style progression. Add extra kilometers in the middle (extend the strong portion).
+    blocks:
+    - type: progression
+      distance_m: 10000
+      intensity:
+        base: easy_pace
+        modifier: neutral
+      internal_note: >
+        Kenyan-style progression (easy â†’ moderate).
+    - type: cooldown
+      distance_m: 1000
+      intensity: easy_pace
+
+  - workout_id: w04_07
+    order_in_week: 7
+    importance: 7
+    title: "Rest Day"
+    category: recovery
+    session_rpe: 0
+    surface: road
+    workout_notes: >
+      Complete rest.
+    blocks: []
+
+- week_number: 5
+  theme: "Increasing Intensity"
+  week_notes: >
+    Mixed-pace workout this week. Long run fatigue should come from duration/hills, not intensity.
+
+  workouts:
+  - workout_id: w05_01
+    order_in_week: 1
+    importance: 3
+    title: "Cruise Intervals"
+    category: intervals
+    session_rpe: 7.5
+    surface: track
+    workout_notes: >
+      Cruise intervals with a slightly wider pace window. Test how you feel running a bit faster.
+    blocks:
+    - type: warmup
+      distance_m: 2000
+      intensity: easy_pace
+      internal_note: >
+        Add 4Ã—20" strides within the warm-up.
+    - type: repeats
+      reps: { min: 7, max: 8 }
+      steps:
+      - type: active
+        duration_min: 3
+        intensity:
+          base: 5k_pace
+          pct: { min: 0.90, max: 0.92 }
+      - type: recovery
+        duration_min: 0.75
+        intensity: easy_pace
+        internal_note: >
+          Jog recovery (~45").
+    - type: cooldown
+      distance_m: 2000
+      intensity: easy_pace
+
+  - workout_id: w05_02
+    order_in_week: 2
+    importance: 5
+    title: "Easy Run"
+    category: base
+    session_rpe: 3
+    surface: road
+    workout_notes: >
+      Easy run.
+    blocks:
+    - type: steady
+      distance_m: { min: 6000, max: 10000 }
+      intensity: easy_pace
+
+  - workout_id: w05_03
+    order_in_week: 3
+    importance: 2
+    title: "Mixed Pace Intervals"
+    category: intervals
+    session_rpe: 8
+    surface: track
+    workout_notes: >
+      Mixed paces. Getting the exact pace perfect is less important than keeping progression inside the set.
+    blocks:
+    - type: warmup
+      distance_m: 2000
+      intensity: easy_pace
+      internal_note: >
+        Add 4Ã—20" strides within the warm-up.
+    - type: repeats
+      reps: 3
+      steps:
+      - type: active
+        duration_min: 3
+        intensity:
+          base: 5k_pace
+          pct: 1.00
+      - type: recovery
+        duration_min: 1.5
+        intensity: easy_pace
+        internal_note: >
+          Jog recovery (~1'30").
+      - type: active
+        duration_min: 2
+        intensity:
+          base: 5k_pace
+          pct: 1.02
+      - type: recovery
+        duration_min: 3
+        intensity: recovery_pace
+        internal_note: >
+          Walk/jog recovery (~3').
+    - type: cooldown
+      distance_m: 2000
+      intensity: easy_pace
+
+  - workout_id: w05_04
+    order_in_week: 4
+    importance: 6
+    title: "Rest or Easy Run"
+    category: optional_run
+    session_rpe: 2
+    surface: road
+    workout_notes: >
+      Optional. Very easy if you run; otherwise rest.
+    blocks:
+    - type: steady
+      distance_m: { min: 0, max: 10000 }
+      intensity: recovery_pace
+      internal_note: >
+        0m means complete rest.
+
+  - workout_id: w05_05
+    order_in_week: 5
+    importance: 4
+    title: "Easy Progression Run"
+    category: base
+    session_rpe: 5
+    surface: road
+    workout_notes: >
+      Easy progressing to moderate.
+    blocks:
+    - type: progression
+      distance_m: { min: 6000, max: 10000 }
+      intensity:
+        base: easy_pace
+        modifier: neutral
+      internal_note: >
+        Easy â†’ moderate progression.
+
+  - workout_id: w05_06
+    order_in_week: 6
+    importance: 1
+    title: "Long Run"
+    category: long_run
+    session_rpe: 6
+    surface: rolling
+    workout_notes: >
+      Easy through rolling hills. Fatigue should be from duration/hills, not intensity.
+    blocks:
+    - type: steady
+      distance_m: { min: 22000, max: 24000 }
+      intensity: easy_pace
+
+  - workout_id: w05_07
+    order_in_week: 7
+    importance: 7
+    title: "Rest Day"
+    category: recovery
+    session_rpe: 0
+    surface: road
+    workout_notes: >
+      Complete rest.
+    blocks: []
+
+- week_number: 6
+  theme: "New Pace Introduction"
+  week_notes: >
+    Introduction of 95% 5k pace (approximately 8kâ€“10k race effort).
+
+  workouts:
+  - workout_id: w06_01
+    order_in_week: 1
+    importance: 4
+    title: "Interval Run"
+    category: intervals
+    session_rpe: 7
+    surface: track
+    workout_notes: >
+      95% 5k pace should feel close to 8kâ€“10k effort. Short rests make this accumulate like longer reps.
+    blocks:
+    - type: warmup
+      distance_m: 2000
+      intensity: easy_pace
+      internal_note: >
+        Add 4Ã—20" strides within the warm-up.
+    - type: repeats
+      reps: 2
+      steps:
+      - type: repeats
+        reps: 6
+        internal_note: >
+          6Ã—500m with short recovery.
+        steps:
+        - type: active
+          distance_m: 500
+          intensity:
+            base: 5k_pace
+            pct: 0.95
+        - type: recovery
+          duration_min: 0.5
+          intensity: recovery_pace
+          internal_note: >
+            Walk recovery (~30").
+      - type: recovery
+        duration_min: 4
+        intensity: recovery_pace
+        internal_note: >
+          Walk between sets (~4').
+    - type: cooldown
+      distance_m: 2000
+      intensity: easy_pace
+
+  - workout_id: w06_02
+    order_in_week: 2
+    importance: 5
+    title: "Easy Run"
+    category: base
+    session_rpe: 3
+    surface: road
+    workout_notes: >
+      Easy run.
+    blocks:
+    - type: steady
+      distance_m: { min: 6000, max: 10000 }
+      intensity: easy_pace
+
+  - workout_id: w06_03
+    order_in_week: 3
+    importance: 3
+    title: "Strong Run"
+    category: tempo
+    session_rpe: 7.5
+    surface: road
+    workout_notes: >
+      Strong but controlled. You should finish feeling ready to do another kilometer.
+    blocks:
+    - type: warmup
+      distance_m: 2000
+      intensity: easy_pace
+      internal_note: >
+        Add 4Ã—20" strides within the warm-up.
+    - type: steady
+      distance_m: 10000
+      intensity:
+        base: 5k_pace
+        pct: 0.85
+    - type: cooldown
+      distance_m: 1000
+      intensity: easy_pace
+
+  - workout_id: w06_04
+    order_in_week: 4
+    importance: 6
+    title: "Very Easy Run"
+    category: recovery
+    session_rpe: 3
+    surface: road
+    workout_notes: >
+      Very easy.
+    blocks:
+    - type: steady
+      distance_m: { min: 6000, max: 10000 }
+      intensity: recovery_pace
+
+  - workout_id: w06_05
+    order_in_week: 5
+    importance: 7
+    title: "Easy Run"
+    category: base
+    session_rpe: 3
+    surface: road
+    workout_notes: >
+      Easy run.
+    blocks:
+    - type: steady
+      distance_m: { min: 7000, max: 12000 }
+      intensity: easy_pace
+
+  - workout_id: w06_06
+    order_in_week: 6
+    importance: 2
+    title: "Progression Run"
+    category: long_run
+    session_rpe: 7.5
+    surface: road
+    workout_notes: >
+      Kenyan-style progression. Start very easy, work down to strong high-end aerobic pace.
+    blocks:
+    - type: progression
+      distance_m: 12000
+      intensity:
+        base: easy_pace
+        modifier: neutral
+      internal_note: >
+        Kenyan-style progression (easy â†’ strong).
+    - type: cooldown
+      distance_m: 2000
+      intensity: easy_pace
+
+  - workout_id: w06_07
+    order_in_week: 7
+    importance: 1
+    title: "Race Day"
+    category: race
+    session_rpe: 10
+    surface: road
+    workout_notes: >
+      Do what you have trained for. You got this! Best of luck!
+    blocks: []
+

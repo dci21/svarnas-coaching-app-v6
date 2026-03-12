@@ -34,3 +34,19 @@ CREATE TABLE coaching (
   created     TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE(athlete_id)
 );
+
+CREATE TABLE generated_training_plans (
+  plan_id               SERIAL PRIMARY KEY,
+  athlete_id            INTEGER NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+  training_plan         JSONB NOT NULL,
+  generation_metadata   JSONB,
+  created               TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE shared_plans (
+  share_id    SERIAL PRIMARY KEY,
+  plan_id     INTEGER NOT NULL REFERENCES generated_training_plans(plan_id) ON DELETE CASCADE,
+  link        VARCHAR(100) UNIQUE NOT NULL,
+  is_active   BOOLEAN NOT NULL DEFAULT true,
+  created     TIMESTAMPTZ NOT NULL DEFAULT now()
+);
