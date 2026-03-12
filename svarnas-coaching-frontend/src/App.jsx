@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Login from './login'
 import Register from './register'
 import Profile from './profile'
+import CoachUI from './coach_ui'
 
 function App() {
   const [pageTracking, setPageTracking] = useState('login')
@@ -79,12 +80,25 @@ function App() {
           </p>
           <button onClick={() => setPageTracking('profile')}>My profile</button>
           {' '}
+          {sessionData.role === 'coach' && (
+            <>
+              <button onClick={() => setPageTracking('coachDashboard')}>Coaching Dashboard</button>
+              {' '}
+            </>
+          )}
           <button onClick={signoutHandler}>sign out</button>
         </div>
       )}
 
       {pageTracking === 'profile' && (
         <Profile
+          token={readToken()}
+          navigateBack={() => setPageTracking('dashboard')}
+        />
+      )}
+
+      {pageTracking === 'coachDashboard' && (
+        <CoachUI
           token={readToken()}
           navigateBack={() => setPageTracking('dashboard')}
         />

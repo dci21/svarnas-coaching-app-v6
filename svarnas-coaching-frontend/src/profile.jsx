@@ -29,6 +29,9 @@ function Profile({ token, navigateBack }) {
   const [successMessage, setSuccessMessage] = useState(null)
   const [err, setErr] = useState(null)
   const [successSave, setSuccessSave] = useState(false)
+  const [coaches, setCoaches] = useState([])
+  const [selectedCoachId, setSelectedCoachId] = useState(null)
+  const [loadedCoachId, setLoadedCoachId] = useState(null)
 
   useEffect(() => {
     fetch('/api/profile', {
@@ -45,6 +48,25 @@ function Profile({ token, navigateBack }) {
         setProfileFields(data)
       })
       .catch(() => setErr('generic fetch error'))
+
+    fetch('/api/coach/list-coaches', {
+      headers: { Authorization: 'Bearer ' + token }
+    })
+      .then(res => res.ok ? res.json() : [])
+      .then(list => setCoaches(list))
+      .catch(() => {})
+
+    fetch('/api/coach/linked-coach', {
+      headers: { Authorization: 'Bearer ' + token }
+    })
+      .then(res => res.ok ? res.json() : { coach: null })
+      .then(data => {
+        if (data.coach) {
+          setSelectedCoachId(data.coach.user_id)
+          setLoadedCoachId(data.coach.user_id)
+        }
+      })
+      .catch(() => {})
   }, [token])
 
   function updateField(key, value) {
@@ -88,10 +110,29 @@ function Profile({ token, navigateBack }) {
                 //slice to trim the time and keep only the date to much the db column
         if (body.race_date) body.race_date = body.race_date.slice(0, 10)
         setProfileFields(body)
-        setSuccessMessage('Profile updated sucessfull')
       } else {
         setErr(body.error)
+        setSuccessSave(false)
+        return
       }
+
+      if (selectedCoachId !== loadedCoachId) {
+        if (selectedCoachId) {
+          await fetch('/api/coach/set-coach', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+            body: JSON.stringify({ coach_id: selectedCoachId })
+          })
+        } else {
+          await fetch('/api/coach/remove-coach', {
+            method: 'DELETE',
+            headers: { Authorization: 'Bearer ' + token }
+          })
+        }
+        setLoadedCoachId(selectedCoachId)
+      }
+
+      setSuccessMessage('Profile updated sucessfull')
     } catch {
       setErr('generic fetch error')
     }
@@ -233,6 +274,24 @@ function Profile({ token, navigateBack }) {
             <option value="">--</option>
             {(profileFields.availability || []).map(day => (
               <option key={day} value={day}>{day}</option>
+            ))}
+          </select>
+        </div>
+
+        <div style={fieldStyling}>
+          <label style={labelStyling}>
+            Link a Coach to your account <ContexBadge context="coach" />
+          </label>
+          <select
+            style={inputStyling}
+            value={selectedCoachId || ''}
+            onChange={e => setSelectedCoachId(e.target.value ? parseInt(e.target.value, 10) : null)}
+          >
+            <option value="">--</option>
+            {coaches.map(c => (
+              <option key={c.user_id} value={c.user_id}>
+                {c.how_we_call_you || c.email}
+              </option>
             ))}
           </select>
         </div>
