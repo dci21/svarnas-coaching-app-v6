@@ -1,10 +1,10 @@
 require('dotenv').config();
 const express = require('express');
 const pool = require('./db');
-const authRoutes = require('./auth_routes');
-const profileRoutes = require('./profile_routes');
-const identifyRoutes = require('./identify_routes');
-const coachRoutes = require('./coach_routes');
+const authRoutes = require('./routes/auth_routes');
+const profileRoutes = require('./routes/profile_routes');
+const identifyRoutes = require('./routes/identify_routes');
+const coachRoutes = require('./routes/coach_routes');
 
 const app = express();
 app.use(express.json());

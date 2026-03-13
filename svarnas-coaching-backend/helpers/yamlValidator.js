@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const yaml = require('js-yaml');
 
-const TRAINING_TEMPLATE_DIR = path.join(__dirname, 'src', 'training_plan_templates', 'running');
+const TRAINING_TEMPLATE_DIR = path.join(__dirname, '..', 'src', 'training_plan_templates', 'running');
 
 // takes the distance and level and search for the yaml file in the template folder then parses the yaml to a JS object
 function yamlToJs(distance, level) {

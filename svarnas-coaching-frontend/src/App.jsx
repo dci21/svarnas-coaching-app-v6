@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import Login from './login'
-import Register from './register'
-import Profile from './profile'
-import CoachUI from './coach_ui'
+import Login from './views/login'
+import Register from './views/register'
+import Profile from './views/profile'
+import CoachUI from './views/coach_ui'
 
 function App() {
   const [pageTracking, setPageTracking] = useState('login')

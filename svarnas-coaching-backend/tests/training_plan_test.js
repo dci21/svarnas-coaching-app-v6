@@ -1,4 +1,4 @@
-const { yamlToJs, yamlValidation } = require('../yamlValidator');
+const { yamlToJs, yamlValidation } = require('../helpers/yamlValidator');
 
 let template;
 

@@ -1,9 +1,9 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const pool = require('./db');
-const authMiddleware = require('./auth_middleware');
-const rateLimiter = require('./rate_limiter');
+const pool = require('../db');
+const authMiddleware = require('../middleware/auth_middleware');
+const rateLimiter = require('../middleware/rate_limiter');
 
 const router = express.Router();
 const authlimiter = rateLimiter(15 * 60 * 1000, 30);
