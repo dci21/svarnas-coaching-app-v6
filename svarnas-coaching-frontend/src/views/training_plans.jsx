@@ -6,6 +6,8 @@ function MyTrainingPlans({ token, navigateBack }) {
   const [err, setErr] = useState(null)
   const [generating, setGenerating] = useState(false)
   const [successMsg, setSuccessMsg] = useState(null)
+  const [shareInfo, setShareInfo] = useState(null)
+  const [shareCopied, setShareCopied] = useState(false)
 
   useEffect(() => {
     loadPlans()
@@ -47,12 +49,55 @@ function MyTrainingPlans({ token, navigateBack }) {
 
   async function viewPlan(planId) {
     setErr(null)
+    setShareInfo(null)
+    setShareCopied(false)
     try {
       const res = await fetch('/api/training-plans/' + planId, {
         headers: { Authorization: 'Bearer ' + token }
       })
       if (!res.ok) throw new Error()
       setActiveTrainiingPlan(await res.json())
+    } catch {
+      setErr('error while generating trainig plan')
+    }
+  }
+
+  async function handleShare(planId) {
+    setShareCopied(false)
+    try {
+      const res = await fetch('/api/share/create-link', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token
+        },
+        body: JSON.stringify({ plan_id: planId })
+      })
+      const body = await res.json()
+      if (res.ok) {
+        setShareInfo({ share_id: body.share_id, link: body.link })
+        const fullUrl = window.location.origin + '/share/' + body.link
+        navigator.clipboard.writeText(fullUrl)
+        setShareCopied(true)
+      } else {
+        setErr(body.error)
+      }
+    } catch {
+      setErr('error while generating trainig plan')
+    }
+  }
+
+  async function handleStopSharing() {
+    if (!shareInfo) return
+    try {
+      const res = await fetch('/api/share/' + shareInfo.share_id, {
+        method: 'DELETE',
+        headers: { Authorization: 'Bearer ' + token }
+      })
+      if (res.ok) {
+        setShareInfo(null)
+        setShareCopied(false)
+      }
     } catch {
       setErr('error while generating trainig plan')
     }
@@ -107,6 +152,28 @@ function MyTrainingPlans({ token, navigateBack }) {
         </button>
         <h2>Training Plan</h2>
 
+        <div style={{ marginBottom: '1rem' }}>
+          {!shareInfo && (
+            <button type="button" onClick={() => handleShare(activeTrainiingPlan.plan_id)}>
+              Share my training plan
+            </button>
+          )}
+          {shareInfo && (
+            <span>
+              <span style={{ color: 'green', marginRight: '10px' }}>
+                {shareCopied ? 'Copied' : ''}
+              </span>
+              <code style={{ fontSize: '0.8rem', background: '#333', padding: '3px 6px' }}>
+                {window.location.origin}/share/{shareInfo.link}
+              </code>
+              {' '}
+              <button type="button" onClick={handleStopSharing} style={{ marginLeft: '8px' }}>
+                Stop Sharing
+              </button>
+            </span>
+          )}
+        </div>
+
         <h3>Generation Metadata</h3>
         <table style={{ borderCollapse: 'collapse', marginBottom: '1.5rem' }}>
           <tbody>
@@ -152,7 +219,7 @@ function MyTrainingPlans({ token, navigateBack }) {
         disabled={generating}
         style={{ marginBottom: '1rem' }}
       >
-        {generating ? 'generating...' : 'Generate My Training Plan'}
+        {generating ? 'generating...' : 'Generate a new Training Plan'}
       </button>
 
       {successMsg && <p style={{ color: 'green' }}>{successMsg}</p>}

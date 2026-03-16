@@ -6,6 +6,7 @@ const profileRoutes = require('./routes/profile_routes');
 const identifyRoutes = require('./routes/identify_routes');
 const coachRoutes = require('./routes/coach_routes');
 const trainingPlanRoutes = require('./routes/training_plan_routes');
+const shareRoutes = require('./routes/share_training_plan_routes');
 
 const app = express();
 app.use(express.json());
@@ -32,6 +33,7 @@ app.use(profileRoutes);
 app.use(identifyRoutes);
 app.use(coachRoutes);
 app.use(trainingPlanRoutes);
+app.use(shareRoutes);
 
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);

@@ -4,6 +4,7 @@ import Register from './views/register'
 import Profile from './views/profile'
 import CoachUI from './views/coach_ui'
 import MyTrainingPlans from './views/training_plans'
+import SharedTrainingPlan from './views/shared_training_plan'
 
 function App() {
   const [pageTracking, setPageTracking] = useState('login')
@@ -33,6 +34,12 @@ function App() {
       })
   }, [])
 
+  const sharePath = window.location.pathname
+  if (sharePath.startsWith('/share/')) {
+    const slug = sharePath.replace('/share/', '')
+    return <SharedTrainingPlan slug={slug} />
+  }
+
   function signinHandler(token) {
     localStorage.setItem('jwt_token', token)
     fetch('/api/auth/session', {
@@ -59,7 +66,7 @@ function App() {
 
   return (
     <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h1>svarnas coaching</h1>
+      <h1>Svarnas Coaching App</h1>
 
       {pageTracking === 'login' && (
         <Login
