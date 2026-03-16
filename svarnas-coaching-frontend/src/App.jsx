@@ -3,6 +3,7 @@ import Login from './views/login'
 import Register from './views/register'
 import Profile from './views/profile'
 import CoachUI from './views/coach_ui'
+import MyTrainingPlans from './views/training_plans'
 
 function App() {
   const [pageTracking, setPageTracking] = useState('login')
@@ -80,6 +81,8 @@ function App() {
           </p>
           <button onClick={() => setPageTracking('profile')}>My profile</button>
           {' '}
+          <button onClick={() => setPageTracking('myTrainingPlans')}>My Training Plans</button>
+          {' '}
           {sessionData.role === 'coach' && (
             <>
               <button onClick={() => setPageTracking('coachDashboard')}>Coaching Dashboard</button>
@@ -92,6 +95,13 @@ function App() {
 
       {pageTracking === 'profile' && (
         <Profile
+          token={readToken()}
+          navigateBack={() => setPageTracking('dashboard')}
+        />
+      )}
+
+      {pageTracking === 'myTrainingPlans' && (
+        <MyTrainingPlans
           token={readToken()}
           navigateBack={() => setPageTracking('dashboard')}
         />
