@@ -1,8 +1,24 @@
 import { useState, useEffect } from 'react'
 
+const DAY_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+
+function formatDate(raw) {
+  if (!raw) return ''
+  const d = new Date(raw)
+  if (isNaN(d)) return raw
+  const dd = String(d.getDate()).padStart(2, '0')
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  const yy = String(d.getFullYear()).slice(-2)
+  const hh = String(d.getHours()).padStart(2, '0')
+  const min = String(d.getMinutes()).padStart(2, '0')
+  if (hh === '00' && min === '00') return `${dd}/${mm}/${yy}`
+  return `${dd}/${mm}/${yy} ${hh}:${min}`
+}
+
 function SharedTrainingPlan({ slug }) {
   const [planData, setPlanData] = useState(null)
   const [err, setErr] = useState(null)
+  const [viewWorkout, setViewWorkout] = useState(null)
 
   useEffect(() => {
     async function fetchSharedPlan() {
@@ -23,7 +39,7 @@ function SharedTrainingPlan({ slug }) {
 
   if (err) return (
     <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h2>Your Shared Training Plans</h2>
+      <h2>Training Plans that are Shared</h2>
       <p style={{ color: 'crimson' }}>{err}</p>
     </div>
   )
@@ -62,7 +78,7 @@ function SharedTrainingPlan({ slug }) {
 
   return (
     <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h2>Your Shared Training Plans</h2>
+      <h2>Training Plans that are Shared</h2>
 
       <p style={{ fontSize: '1.1rem', marginBottom: '1.5rem' }}>
         Training plan of <strong>{planData.public_name || 'Anonymous'}</strong>
@@ -71,21 +87,80 @@ function SharedTrainingPlan({ slug }) {
       <div style={{ marginBottom: '1rem', fontSize: '0.9rem' }}>
         {meta.distance && <span>Distance: {meta.distance} &nbsp;|&nbsp; </span>}
         {meta.level && <span>Level: {meta.level} &nbsp;|&nbsp; </span>}
-        {meta.race_date && <span>Race: {meta.race_date}</span>}
+        {meta.race_date && <span>Race: {formatDate(meta.race_date)}</span>}
       </div>
 
-      {weeks.map(week => (
-        <div key={week.week_number} style={weekCardStyle}>
-          <h4>Week {week.week_number}{week.theme ? ` — ${week.theme}` : ''}</h4>
-          {week.week_notes && <p style={{ fontSize: '0.85rem', fontStyle: 'italic' }}>{week.week_notes}</p>}
-          {week.workouts.map((wo, idx) => (
-            <div key={idx} style={workoutRowStyle}>
-              <strong>{wo.day}</strong> — {wo.title}
-              {wo.category && <span style={categoryTagStyle}>{wo.category}</span>}
-            </div>
-          ))}
+      {weeks.map(week => {
+        const sorted = [...week.workouts].sort((a, b) => DAY_ORDER.indexOf(a.day) - DAY_ORDER.indexOf(b.day))
+        return (
+          <div key={week.week_number} style={weekCardStyle}>
+            <h4>Week {week.week_number}{week.theme ? ` — ${week.theme}` : ''}</h4>
+            {week.week_notes && <p style={{ fontSize: '0.85rem', fontStyle: 'italic' }}>{week.week_notes}</p>}
+            {sorted.map((wo, idx) => (
+              <div key={idx} style={{ ...workoutRowStyle, cursor: 'pointer' }} onClick={() => setViewWorkout(wo)}>
+                <strong>{wo.day}</strong> — {wo.title}
+                {wo.category && <span style={categoryTagStyle}>{wo.category}</span>}
+              </div>
+            ))}
+          </div>
+        )
+      })}
+
+      {/* workout details popup */}
+      {viewWorkout && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.6)', display: 'flex',
+          alignItems: 'center', justifyContent: 'center', zIndex: 999
+        }}>
+          <div style={{
+            background: '#1e1e2e', border: '1px solid #555', borderRadius: '6px',
+            padding: '1.5rem', maxWidth: '520px', width: '90%', maxHeight: '80vh',
+            overflowY: 'auto', position: 'relative'
+          }}>
+            <button type="button" onClick={() => setViewWorkout(null)}
+              style={{ position: 'absolute', top: '10px', right: '14px', background: 'none',
+                border: 'none', color: '#ccc', fontSize: '1.2rem', cursor: 'pointer' }}>
+              X
+            </button>
+            <h3 style={{ marginTop: 0 }}>{viewWorkout.title}</h3>
+            <p><strong>{viewWorkout.day}</strong>
+              {viewWorkout.category && <span style={categoryTagStyle}>{viewWorkout.category}</span>}
+            </p>
+            {viewWorkout.workout_notes && <p><em>Notes:</em> {viewWorkout.workout_notes}</p>}
+            {viewWorkout.session_rpe && <p><em>RPE:</em> {viewWorkout.session_rpe}</p>}
+            {viewWorkout.surface && <p><em>Terrain:</em> {viewWorkout.surface}</p>}
+            {viewWorkout.blocks && viewWorkout.blocks.length > 0 && (
+              <div>
+                <p style={{ marginBottom: '4px' }}><em>Workout:</em></p>
+                {viewWorkout.blocks.map((blk, bi) => {
+                  const fmtIntensity = v => !v ? '' : typeof v === 'string' ? v : v.base || ''
+                  const fmtDist = b => b.distance_m != null
+                    ? (b.distance_m >= 1000 ? (b.distance_m / 1000) + 'km' : b.distance_m + 'm')
+                    : b.duration_min != null ? b.duration_min + 'min' : ''
+                  if (blk.type === 'repeats') {
+                    return (
+                      <div key={bi} style={{ marginBottom: '6px', paddingLeft: '8px', borderLeft: '2px solid #555' }}>
+                        <span>{blk.reps}x</span>
+                        {blk.steps && blk.steps.map((s, si) => (
+                          <div key={si} style={{ paddingLeft: '10px', fontSize: '0.85rem' }}>
+                            {fmtDist(s)} {s.type} @{fmtIntensity(s.intensity)}
+                          </div>
+                        ))}
+                      </div>
+                    )
+                  }
+                  return (
+                    <div key={bi} style={{ marginBottom: '4px', fontSize: '0.9rem' }}>
+                      {fmtDist(blk)} {blk.type} @{fmtIntensity(blk.intensity)}
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </div>
         </div>
-      ))}
+      )}
     </div>
   )
 }

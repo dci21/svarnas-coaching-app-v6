@@ -68,9 +68,12 @@ function generateTrainingPlan(profile) {
     };
   }
 
+  // only keep weeks from now to race day
+  const slice_weeks = yaml_template_data.weeks.slice(-weeks_to_race_date);
+
   const filtered_weeks = [];
-  for (let w = 0; w < yaml_template_data.weeks.length; w++) {
-    const week = yaml_template_data.weeks[w];
+  for (let w = 0; w < slice_weeks.length; w++) {
+    const week = slice_weeks[w];
     const weekWorkouts = pickWorkoutsForWeek(week, runs_per_week, long_run_day, availability);
 
     filtered_weeks.push({

@@ -272,7 +272,7 @@ function Profile({ token, navigateBack }) {
             disabled={!(profileFields.availability && profileFields.availability.length)}
           >
             <option value="">--</option>
-            {(profileFields.availability || []).map(day => (
+            {DAY_ENUMS.filter(d => (profileFields.availability || []).includes(d)).map(day => (
               <option key={day} value={day}>{day}</option>
             ))}
           </select>
