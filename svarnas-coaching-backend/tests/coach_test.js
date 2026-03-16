@@ -92,6 +92,16 @@ describe('PUT /api/coach/set-coach', () => {
     expect(res.body.error).toBe('self coaching not allowed');
   });
 
+  it('try to link a coach that does not exist not accepted', async () => {
+    const res = await request(app)
+      .put('/api/coach/set-coach')
+      .set('Authorization', 'Bearer ' + athleteToken)
+      .send({ coach_id: 999999 });
+
+    expect(res.status).toBe(404);
+    expect(res.body.error).toBe('no coach with this id');
+  });
+
   it('user can change coach', async () => {
     const res = await request(app)
       .put('/api/coach/set-coach')

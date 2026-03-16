@@ -21,6 +21,24 @@ describe('POST /api/signup', () => {
     expect(res.body.registered).toBe('succeed');
   });
 
+  it('signup without email no accepted', async () => {
+    const res = await request(app)
+      .post('/api/signup')
+      .send({ pass: 'Kram88!zq' });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('email and pass required');
+  });
+
+  it('singup without pass not accepted', async () => {
+    const res = await request(app)
+      .post('/api/signup')
+      .send({ email: 'george@svarnas.com' });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe('email and pass required');
+  });
+
   it('duplicate email rejected', async () => {
     const res = await request(app)
       .post('/api/signup')

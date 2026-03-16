@@ -118,6 +118,21 @@ describe('/api/training-plans', () => {
     expect(fetchRes.body.training_plan.weeks).toBeDefined();
   });
 
+  it('user a cant access training plan of user b', async () => {
+    const genRes = await request(app)
+      .post('/api/training-plans/generate')
+      .set('Authorization', 'Bearer ' + testToken);
+
+    const planId = genRes.body.plan_id;
+
+    const res = await request(app)
+      .get('/api/training-plans/' + planId)
+      .set('Authorization', 'Bearer ' + emptyToken);
+
+    expect(res.status).toBe(404);
+    expect(res.body.error).toBe('no training plan found with this id');
+  });
+
   it('cant generate plan when profile data missing', async () => {
     const res = await request(app)
       .post('/api/training-plans/generate')

@@ -107,6 +107,22 @@ describe('/api/share', () => {
     expect(res.body.error).toBe('cant find the training plan for sharing');
   });
 
+  it('user a cant revoke training plan share link from user b', async () => {
+    const linkRes = await request(app)
+      .post('/api/share/create-link')
+      .set('Authorization', 'Bearer ' + ownerToken)
+      .send({ plan_id: planId });
+
+    const shareId = linkRes.body.share_id;
+
+    const res = await request(app)
+      .delete('/api/share/' + shareId)
+      .set('Authorization', 'Bearer ' + otherToken);
+
+    expect(res.status).toBe(404);
+    expect(res.body.error).toBe('no training plan with this id');
+  });
+
   it('wrong slug returns not found error', async () => {
     const res = await request(app).get('/api/share/doesnotexist123');
 
