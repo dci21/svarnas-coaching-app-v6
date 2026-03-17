@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 
 const DAY_ENUMS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+const DAY_LABELS = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' }
 
 const contextColors = {
   private: '#8b0000',
@@ -255,7 +256,7 @@ function Profile({ token, navigateBack }) {
                   checked={(profileFields.availability || []).includes(day)}
                   onChange={() => addRemoveDay(day)}
                 />
-                {' '}{day}
+                {' '}{DAY_LABELS[day] || day}
               </label>
             ))}
           </div>
@@ -273,7 +274,7 @@ function Profile({ token, navigateBack }) {
           >
             <option value="">--</option>
             {DAY_ENUMS.filter(d => (profileFields.availability || []).includes(d)).map(day => (
-              <option key={day} value={day}>{day}</option>
+              <option key={day} value={day}>{DAY_LABELS[day] || day}</option>
             ))}
           </select>
         </div>

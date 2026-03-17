@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 
+const DAY_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+const DAY_LABELS = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' }
+
 function CoachUI({ token, navigateBack }) {
   const [linkedAthletes, setLinkedAthletes] = useState(null)
   const [err, setErr] = useState(null)
@@ -54,8 +57,8 @@ function CoachUI({ token, navigateBack }) {
           </div>
           {ath.availability && (
             <div style={{ marginTop: '4px', fontSize: '0.85rem' }}>
-              Training days: {ath.availability.join(', ')}
-              {ath.long_run_day && <span> (long run: {ath.long_run_day})</span>}
+              Training days: {[...ath.availability].sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b)).map(d => DAY_LABELS[d] || d).join(', ')}
+              {ath.long_run_day && <span> (long run: {DAY_LABELS[ath.long_run_day] || ath.long_run_day})</span>}
             </div>
           )}
         </div>

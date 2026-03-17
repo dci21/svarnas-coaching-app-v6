@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 
 const DAY_ORDER = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+const DAY_LABELS = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' }
 
 function formatDate(raw) {
   if (!raw) return ''
@@ -98,7 +99,7 @@ function SharedTrainingPlan({ slug }) {
             {week.week_notes && <p style={{ fontSize: '0.85rem', fontStyle: 'italic' }}>{week.week_notes}</p>}
             {sorted.map((wo, idx) => (
               <div key={idx} style={{ ...workoutRowStyle, cursor: 'pointer' }} onClick={() => setViewWorkout(wo)}>
-                <strong>{wo.day}</strong> — {wo.title}
+                <strong>{DAY_LABELS[wo.day] || wo.day}</strong> — {wo.title}
                 {wo.category && <span style={categoryTagStyle}>{wo.category}</span>}
               </div>
             ))}
@@ -124,38 +125,66 @@ function SharedTrainingPlan({ slug }) {
               X
             </button>
             <h3 style={{ marginTop: 0 }}>{viewWorkout.title}</h3>
-            <p><strong>{viewWorkout.day}</strong>
+            <p><strong>{DAY_LABELS[viewWorkout.day] || viewWorkout.day}</strong>
               {viewWorkout.category && <span style={categoryTagStyle}>{viewWorkout.category}</span>}
             </p>
-            {viewWorkout.workout_notes && <p><em>Notes:</em> {viewWorkout.workout_notes}</p>}
-            {viewWorkout.session_rpe && <p><em>RPE:</em> {viewWorkout.session_rpe}</p>}
-            {viewWorkout.surface && <p><em>Terrain:</em> {viewWorkout.surface}</p>}
             {viewWorkout.blocks && viewWorkout.blocks.length > 0 && (
-              <div>
-                <p style={{ marginBottom: '4px' }}><em>Workout:</em></p>
+              <div style={{ marginBottom: '1rem' }}>
+                <p style={{ marginBottom: '6px' }}><strong>Workout Structure:</strong></p>
                 {viewWorkout.blocks.map((blk, bi) => {
-                  const fmtIntensity = v => !v ? '' : typeof v === 'string' ? v : v.base || ''
-                  const fmtDist = b => b.distance_m != null
-                    ? (b.distance_m >= 1000 ? (b.distance_m / 1000) + 'km' : b.distance_m + 'm')
-                    : b.duration_min != null ? b.duration_min + 'min' : ''
+                  const fmtIntensity = v => {
+                    if (!v) return ''
+                    if (typeof v === 'string') return v
+                    const base = v.base || ''
+                    if (v.pct != null) {
+                      if (typeof v.pct === 'object' && v.pct.min != null)
+                        return Math.round(v.pct.min * 100) + '-' + Math.round(v.pct.max * 100) + '% of ' + base
+                      return Math.round(v.pct * 100) + '% of ' + base
+                    }
+                    return base
+                  }
+                  const fmtDist = b => {
+                    if (b.distance_m != null) {
+                      if (typeof b.distance_m === 'object' && b.distance_m.min != null) {
+                        return (b.distance_m.min / 1000) + '-' + (b.distance_m.max / 1000) + 'km'
+                      }
+                      return b.distance_m >= 1000 ? (b.distance_m / 1000) + 'km' : b.distance_m + 'm'
+                    }
+                    if (b.duration_min != null) return b.duration_min + 'min'
+                    return ''
+                  }
                   if (blk.type === 'repeats') {
                     return (
-                      <div key={bi} style={{ marginBottom: '6px', paddingLeft: '8px', borderLeft: '2px solid #555' }}>
+                      <div key={bi} style={{ marginBottom: '8px', paddingLeft: '8px', borderLeft: '2px solid #555' }}>
                         <span>{blk.reps}x</span>
                         {blk.steps && blk.steps.map((s, si) => (
-                          <div key={si} style={{ paddingLeft: '10px', fontSize: '0.85rem' }}>
-                            {fmtDist(s)} {s.type} @{fmtIntensity(s.intensity)}
+                          <div key={si} style={{ paddingLeft: '10px' }}>
+                            <div style={{ fontSize: '0.9rem' }}>
+                              {fmtDist(s)} {s.type} @{fmtIntensity(s.intensity)}
+                            </div>
+                            {s.internal_note && <div style={{ fontSize: '0.8rem', fontStyle: 'italic', color: '#999', paddingLeft: '4px' }}>{s.internal_note}</div>}
                           </div>
                         ))}
                       </div>
                     )
                   }
                   return (
-                    <div key={bi} style={{ marginBottom: '4px', fontSize: '0.9rem' }}>
-                      {fmtDist(blk)} {blk.type} @{fmtIntensity(blk.intensity)}
+                    <div key={bi} style={{ marginBottom: '6px' }}>
+                      <div style={{ fontSize: '0.9rem' }}>
+                        {fmtDist(blk)} {blk.type} @{fmtIntensity(blk.intensity)}
+                      </div>
+                      {blk.internal_note && <div style={{ fontSize: '0.8rem', fontStyle: 'italic', color: '#999', paddingLeft: '4px' }}>{blk.internal_note}</div>}
                     </div>
                   )
                 })}
+              </div>
+            )}
+            {viewWorkout.session_rpe && <p><strong>RPE:</strong> {viewWorkout.session_rpe}</p>}
+            {viewWorkout.surface && <p><strong>Suggested Terrain:</strong> {viewWorkout.surface}</p>}
+            {viewWorkout.workout_notes && (
+              <div>
+                <p style={{ marginBottom: '4px' }}><strong>Workout Notes:</strong></p>
+                <p style={{ fontSize: '0.9rem', fontStyle: 'italic' }}>{viewWorkout.workout_notes}</p>
               </div>
             )}
           </div>
