@@ -1,1 +1,0 @@
-single process - for multiple instances this needs to be moved to redis
